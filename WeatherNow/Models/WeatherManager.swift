@@ -5,6 +5,7 @@
 //  Created by Inderpreet Bhatti on 17/10/24.
 //
 
+
 import Foundation
 import CoreLocation
 
@@ -14,20 +15,27 @@ protocol WeatherManagerDelegate {
 }
 
 struct WeatherManager {
-    let weatherURL = "https://api.openweathermap.org/data/2.5/weather?appid=&units=metric"
+    let weatherURL = "https://api.openweathermap.org/data/2.5/weather?units=metric"
     
     var delegate: WeatherManagerDelegate?
     
     
     func fetchWeather(cityName: String) {
-        let urlString = "\(weatherURL)&q=\(cityName)"
-        performRequest(with: urlString);
-        
+        if let apiKey = Bundle.main.infoDictionary?["API_KEY"] as? String {
+            let urlString = "\(weatherURL)&appid=\(apiKey)&q=\(cityName)"
+            performRequest(with: urlString);
+        } else {
+            print("API Key not found")
+        }
     }
     
     func fetchWeather(latitude: CLLocationDegrees, longitude: CLLocationDegrees) {
-        let urlString = "\(weatherURL)&lat=\(latitude)&lon=\(longitude)"
-        performRequest(with: urlString);
+        if let apiKey = Bundle.main.infoDictionary?["API_KEY"] as? String {
+            let urlString = "\(weatherURL)&appid=\(apiKey)&lat=\(latitude)&lon=\(longitude)"
+            performRequest(with: urlString);
+        } else {
+            print("API Key not found")
+        }
     }
     
     func performRequest(with urlString: String) {
